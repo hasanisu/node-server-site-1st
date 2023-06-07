@@ -14,3 +14,11 @@ https://www.youtube.com/watch?v=gZvzX5k3bbU
 path?name=value&name=value&name=avalue
 
 */
+
+/*
+Insert:
+*/
+
+/*
+find:
+*/

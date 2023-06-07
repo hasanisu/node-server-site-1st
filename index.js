@@ -37,17 +37,30 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
     const userCollection = await client.db("simpleDb").collection('users');
-    // const accept = userCollection.collection('users');
-    const user = {name: 'hasan', email:'hasan@gmail.com'}
-    const result = await userCollection.insertOne(user)
-    console.log(result);
+    // const user = {name: 'jony', email:'jony@gmail.com'}
+    // const result = await userCollection.insertOne(user)
+    // console.log(result);
+
+    app.get('/users', async (req, res)=>{
+      const cursor = userCollection.find({});
+      const users = await cursor.toArray();
+      res.send(users);
+    })
+
+    app.post('/users', async (req, res)=>{
+      const user = req.body;
+      user.id = users.length + 1;
+      // users.push(user)
+      const result = await userCollection.insertOne(user)
+      console.log(result);
+      user._id = result.insertedId;
+      res.send(user);
+  })
     
-  } finally {
-    // Ensures that the client will close when you finish/error
+  } 
+  finally {
     // await client.close();
   }
 }
@@ -57,27 +70,27 @@ run().catch(console.dir);
 
 
 
-app.get('/users', (req, res)=>{
-  if(req.query.name){
-    const search = req.query.name;
+// app.get('/users', (req, res)=>{
+//   if(req.query.name){
+//     const search = req.query.name;
 
-    console.log(req.query.name);
-    const filtered = users.filter(usr => usr.name.toLowerCase().indexOf(search) >= 0);
-    res.send(filtered);
-  }
-  else{
-    res.send(users)
-  }
+//     console.log(req.query.name);
+//     const filtered = users.filter(usr => usr.name.toLowerCase().indexOf(search) >= 0);
+//     res.send(filtered);
+//   }
+//   else{
+//     res.send(users)
+//   }
     
-});
+// });
 
-app.post('/users', (req, res)=>{
-    const user = req.body;
-    user.id = users.length + 1;
-    users.push(user)
-    console.log(req.body)
-    res.send(user);
-})
+// app.post('/users', (req, res)=>{
+//     const user = req.body;
+//     user.id = users.length + 1;
+//     users.push(user)
+//     console.log(req.body)
+//     res.send(user);
+// })
   
 
   app.listen(port, () => {
